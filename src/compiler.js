@@ -1,3 +1,5 @@
+import Watcher from "./watcher.js"
+
 class Compiler {
   constructor(vm) {
     this.vm = vm
@@ -5,30 +7,34 @@ class Compiler {
     this.compiler(this.el)
   }
 
-  // 编译模板，处理文本节点和元素节点
+  /**
+   * 编译模板，处理文本节点和元素节点
+   * @param {HTMLElement} el 
+   */
   compiler(el) {
     const childNodes = el.childNodes
     Array.from(childNodes).forEach(node => {
-      // 处理文本节点
-      if (this.isTextNode(node)) {
+      if (this.isTextNode(node)) { // 处理文本节点
         this.compilerText(node)
-      } else if (this.isElementNode(node)) {
-        // 处理元素节点
+      } else if (this.isElementNode(node)) { // 处理元素节点
         this.compilerElement(node)
       }
 
-      // 判断 node节点是否有子节点。如果有，递归调用 compile
+      // 判断 node 节点是否有子节点。如果有，递归调用 compile
       if (node.childNodes.length) {
         this.compiler(node)
       }
     })
   }
 
-  // 编译元素节点，处理指令
+  /**
+   * 编译元素节点，处理指令
+   * @param {Node} node 
+   */
   compilerElement(node) {
     // 遍历所有属性节点
     Array.from(node.attributes).forEach(attr => {
-      // 判断是否 v-开头指令
+      // 判断是否 v- 开头指令
       let attrName = attr.name
       if (this.isDirective(attrName)) {
         // 为了更优雅的处理不同方法，减去指令中的 v-
@@ -39,28 +45,33 @@ class Compiler {
     })
   }
 
-  // 执行对应指令的方法
+  /**
+   * 执行对应指令的方法
+   * @param {Node} node 
+   * @param {String} key 
+   * @param {String} attrName 
+   */
   update(node, key, attrName) {
     let updateFn = this[attrName + 'Updater']
     // 存在指令才执行对应方法
     updateFn && updateFn.call(this, node, this.vm[key], key)
   }
 
-  // 处理 v-text指令
+  // 处理 v-text 指令
   textUpdater(node, value, key) {
     node.textContent = value
 
-    // 创建 Watcher对象，当数据改变时更新视图
+    // 创建 Watcher 对象，当数据改变时更新视图
     new Watcher(this.vm, key, (newValue) => {
       node.textContent = newValue
     })
   }
 
-  // 处理 v-model指令
+  // 处理 v-model 指令
   modelUpdater(node, value, key) {
     node.value = value
 
-    // 创建 Watcher对象，当数据改变时更新视图
+    // 创建 Watcher 对象，当数据改变时更新视图
     new Watcher(this.vm, key, (newValue) => {
       node.value = newValue
     })
@@ -70,16 +81,20 @@ class Compiler {
     })
   }
 
-  // 编译文本节点，处理插值表达式
+  /**
+   * 编译文本节点，处理插值表达式
+   * @param {Node} node 
+   */
   compilerText(node) {
     const reg = /\{\{(.+?)\}\}/
     let value = node.textContent
-    if (reg.test(value)) {
+    const group = value.match(reg)
+    if (group) {
       // 只考虑一层的对象，如 data.msg = 'hello world'，不考虑嵌套的对象。且假设只有一个插值表达式。
-      const key = RegExp.$1.trim()
+      const key = group[1].trim()
       node.textContent = value.replace(reg, this.vm[key])
 
-      // 创建 Watcher对象，当数据改变时更新视图
+      // 创建 Watcher 对象，当数据改变时更新视图
       new Watcher(this.vm, key, (newValue) => {
         node.textContent = newValue
       })
@@ -101,3 +116,5 @@ class Compiler {
     return node.nodeType === 1
   }
 }
+
+export default Compiler

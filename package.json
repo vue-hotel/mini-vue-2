@@ -1,0 +1,26 @@
+{
+  "name": "mini-vue-2",
+  "version": "1.0.0",
+  "description": "mini vue",
+  "main": "index.js",
+  "scripts": {
+    "dev": "http-server -p 2333",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-hotel/mini-vue-2.git"
+  },
+  "keywords": [
+    "vue2"
+  ],
+  "author": "justorez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vue-hotel/mini-vue-2/issues"
+  },
+  "homepage": "https://github.com/vue-hotel/mini-vue-2#readme",
+  "devDependencies": {
+    "http-server": "^14.1.0"
+  }
+}

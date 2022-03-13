@@ -3,32 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Playground</title>
   </head>
   <body>
     <div id="app">
-      {{auth}}
-      <div class="test">{{auth}}</div>
-      <p v-text="auth"></p>
-      <ul>
-        <li>{{auth}}</li>
-        <li><h1>{{auth}}</h1></li>
-        <li><p>{{auth}}</p></li>
-      </ul>
-      <input type="text" v-model="auth" />
+      <h1>{{ title }}</h1>
+      <input type="text" v-model="name"/>&nbsp;&nbsp;
+      <sapn v-text="name"></sapn>&nbsp;&nbsp;
+      <span class="timer">{{ timer }}</span>
     </div>
-    <script src="./core/dep.js"></script>
-    <script src="./core/watcher.js"></script>
-    <script src="./core/observer.js"></script>
-    <script src="./core/compiler.js"></script>
-    <script src="./core/vue.js"></script>
-    <script>
+
+    <script type="module">
+      import Vue from './src/vue.js'
       const vm = new Vue({
-        el: '#app',
+        el: "#app",
         data: {
-          auth: 'Mirai 白'
+          title: 'Mini Vue',
+          name: "justorez",
+          timer: 0
         }
       })
+
+      setInterval(() => {
+        vm.timer += 1
+      }, 1000)
     </script>
   </body>
 </html>

@@ -1,8 +1,14 @@
+import Dep from './dep.js'
+
 class Observer {
   constructor(data) {
     this.walk(data)
   }
-  // 遍历 data($data)中的属性，把属性转换成响应式数据
+
+  /**
+   * 遍历 data 中的属性，把属性转换成响应式数据
+   * @param {Object} data 
+   */
   walk(data) {
     if (!data || typeof data !== 'object') {
       return
@@ -11,7 +17,13 @@ class Observer {
       this.defineReactive(data, key, data[key])
     })
   }
-  // 定义响应式数据
+
+  /**
+   * 定义响应式数据
+   * @param {Object} obj 
+   * @param {String|Number} key 
+   * @param {*} value 
+   */
   defineReactive(obj, key, value) {
     const that = this
     // 负责收集依赖并发送通知
@@ -39,3 +51,5 @@ class Observer {
     })
   }
 }
+
+export default Observer
